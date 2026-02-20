@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.env
+.ipynb_checkpoints
+
+# App data
+data/tmp/
+data/exports/*.xlsx
+data/exports/*.xml
+
+# VS Code
+.vscode/

@@ -1,0 +1,39 @@
+---
+title: Plan de travail codage projet planning_cctp
+---
+
+flowchart TD
+    A[Initialisation du projet] --> B[Création de l'arborescence]
+    B --> C[Initialisation Git]
+    C --> D[Premier commit: structure]
+    D --> E[Développement par modules]
+    E --> F1[Module extraction PDF]
+    E --> F2[Module analyse NLP]
+    E --> F3[Module parsing tâches]
+    E --> F4[Module génération Excel/XML]
+    F1 --> G1[Commit: extraction PDF]
+    F2 --> G2[Commit: NLP]
+    F3 --> G3[Commit: parsing tâches]
+    F4 --> G4[Commit: génération]
+    G1 --> H[Ajout de commentaires et docstrings]
+    G2 --> H
+    G3 --> H
+    G4 --> H
+    H --> I[Tests unitaires]
+    I --> J[Commit: tests]
+    J --> K[Documentation README]
+    K --> L[Commit: documentation]
+    L --> M[Revue de code et refactoring]
+    M --> N[Commit: refactoring]
+    N --> O[Livraison ou démo]
+
+%% Règles élémentaires de codage
+classDef regle fill:#f9f,stroke:#333,stroke-width:2px;
+class H regle;
+
+%% Conseils
+%% - Commits réguliers à chaque étape clé
+%% - Ajout de commentaires/docstrings dans chaque fonction
+%% - Utiliser des noms explicites pour les variables et fonctions
+%% - Documenter les choix techniques dans le README
+%% - Revue de code avant livraison
