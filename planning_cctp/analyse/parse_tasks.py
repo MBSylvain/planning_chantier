@@ -18,12 +18,32 @@ def extract_tasks_from_text(text: str):
 
 	# Regex pour détecter les lots et les durées
 	lot_regex = re.compile(r"Lot\s*\d+\s*-\s*.+", re.IGNORECASE)
-	duree_regex = re.compile(r"(?:durée|délai)\s*:?\s*(\d+)\s*(jour|jours|semaine|semaines)", re.IGNORECASE)
+	duree_regex = re.compile(r"(?:durée|délai)\s*:?'?\s*(\d+)\s*(jour|jours|semaine|semaines)", re.IGNORECASE)
 
+	# Détecter uniquement le(s) chapitre(s) "description des travaux" ou "description des ouvrages"
+	start_regex = re.compile(r"(?i)description des (?:travaux|ouvrages)")
+	# Fin de chapitre : nouveau lot / chapitre / article / annexe / sommaire
+	end_regex = re.compile(r"(?i)^(?:lot\s*\d+|chapitre\b|article\b|annexe\b|sommaire\b)")
+
+	lines = [l for l in text.splitlines()]
+	sections = []
+	for i, line in enumerate(lines):
+		if start_regex.search(line):
+			# collecter jusqu'à la prochaine entête logique
+			j = i + 1
+			while j < len(lines) and not end_regex.match(lines[j]):
+				j += 1
+			# inclure les lignes entre la ligne de titre et la fin détectée
+			section = "\n".join(lines[i+1:j])
+			if section.strip():
+				sections.append(section)
+
+	# si on a trouvé des sections ciblées, on n'analyse que ces sections
+	source_text = "\n".join(sections) if sections else text
 
 	previous_task_id = None
 	previous_task_title = None
-	for line in text.splitlines():
+	for line in source_text.splitlines():
 		line = line.strip()
 		if not line:
 			continue
@@ -68,7 +88,7 @@ def extract_tasks_from_text(text: str):
 
 	# Fallback : si aucune tâche détectée, chaque ligne non vide devient une tâche
 	if not tasks:
-		for i, line in enumerate([l for l in text.splitlines() if l.strip()]):
+		for i, line in enumerate([l for l in source_text.splitlines() if l.strip()]):
 			tasks.append({
 				"id": i+1,
 				"lot": "Lot ?",
